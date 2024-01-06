@@ -1,11 +1,11 @@
 === Plugin Name ===
 
-Plugin Name:  Punch Card
-Description:  The Punch Card plugin places the traditional "Buy 5, get 1 free" style punch card on your WordPress website, allowing you and your clients to track their points with a simple click!
+Plugin Name:  User Meta Box
+Description:  comming soon
 Plugin URI:   #
 Author:       Tarik Moumini
 Version:      1.0
-Text Domain:  punchcard
+Text Domain:  user-meta-box
 Domain Path:  /languages
 License:      GPL v2 or later
 License URI:  https://www.gnu.org/licenses/gpl-2.0.txt
