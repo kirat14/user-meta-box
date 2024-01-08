@@ -35,7 +35,7 @@ define('USERMETABOXDOMAIN', 'user-meta-box');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 
 
-spl_autoload_register('umb_psr4_autoloader');
+//spl_autoload_register('umb_psr4_autoloader');
 
 /**
  * An example of a project-specific implementation.
@@ -43,7 +43,7 @@ spl_autoload_register('umb_psr4_autoloader');
  * @param string $class The fully-qualified class name.
  * @return void
  */
-function umb_psr4_autoloader($class)
+/* function umb_psr4_autoloader($class)
 {
 	// replace namespace separators with directory separators in the relative 
 	// class name, append with .php
@@ -57,9 +57,12 @@ function umb_psr4_autoloader($class)
 	if (file_exists($file)) {
 		require $file;
 	}
-}
+} */
 use \yso\classes\UserMetaBox;
 use \yso\classes\UMBTextField;
+use Valitron\Validator;
+
+require __DIR__ . '/vendor/autoload.php';
 
 $user_meta_box = new UserMetaBox('My user meta box');
 $fields[] = new UMBTextField(
@@ -80,4 +83,13 @@ $fields[] = new UMBTextField(
 $user_meta_box->add_fields($fields);
 
 $user_meta_box->init();
+
+$v = new Validator(array('name' => ''));
+$v->rule('required', 'name');
+if($v->validate()){
+    error_log('Success');
+}
+else {
+    log_error($v->errors());
+}
 

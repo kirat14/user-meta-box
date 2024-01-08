@@ -1,0 +1,18 @@
+{
+    "name": "ysotarik/user-meta-box",
+    "type": "library",
+    "require": {
+        "vlucas/valitron": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "yso\\classes\\": "includes/classes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "kirat14",
+            "email": "moumini.tarik@gmail.com"
+        }
+    ]
+}
