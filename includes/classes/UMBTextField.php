@@ -13,6 +13,7 @@ class UMBTextField
 		public string $id,
 		public string $value,
 		public string $lable,
+		public array $rules,
 		public string $extra_attr = ''
 	) {
 

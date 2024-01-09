@@ -60,7 +60,6 @@ define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 } */
 use \yso\classes\UserMetaBox;
 use \yso\classes\UMBTextField;
-use Valitron\Validator;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -68,28 +67,29 @@ $user_meta_box = new UserMetaBox('My user meta box');
 $fields[] = new UMBTextField(
 	'salary_range',
 	'yso_salary_range',
-	'$90,000',
-	'Salary Range'
+	'90000',
+	'Salary Range',
+	[
+		'length' => [
+			['visa_status', 5]
+		]
+	]
 );
 
 $fields[] = new UMBTextField(
 	'visa_status',
 	'yso_visa_status',
 	'F1',
-	'Visa Status'
+	'Visa Status',
+	[
+		'length' => [
+			['visa_status', 2]
+		]
+	]
 );
 
 
 $user_meta_box->add_fields($fields);
 
 $user_meta_box->init();
-
-$v = new Validator(array('name' => ''));
-$v->rule('required', 'name');
-if($v->validate()){
-    error_log('Success');
-}
-else {
-    log_error($v->errors());
-}
 

@@ -7,11 +7,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use Valitron\Validator;
 
 class UserMetaBox
 {
     private array $fields;
     private string $html;
+    private Validator $validator;
     public function __construct(private string $box_title)
     {
         // Determines whether the current request is for an administrative interface page.
@@ -73,12 +75,50 @@ class UserMetaBox
         }
     }
 
+    public function validate($errors, $update, $user)
+    {
+        if (isset($user)) {
+            $fields_value = array();
+            $rules = array();
+
+            foreach ($this->fields as $field) {
+                if (isset($_POST[$field->name])) {
+                    $fields_value[$field->name] = sanitize_text_field($_POST[$field->name]);
+                    $rules = array_merge($rules, $field->rules);
+                }
+            }
+
+            $this->validator = new Validator($fields_value);
+            $this->validator->rules($rules);
+            // Should use add rule 
+            // So not to overwrite rules names
+            //$this->validator->rule()
+            
+
+            if (!$this->validator->validate()) {
+                $validator_errors = $this->validator->errors();
+                foreach ($validator_errors as $field_name => $list_of_errors) {
+                    for ($i = 0; $i < count($list_of_errors); $i++) {
+                        $errors->add("invalid_{$field_name}", $list_of_errors[$i]);
+                    }
+                }
+            } else {
+                foreach ($fields_value as $key => $value) {
+                    // Valid phone number, save it
+                    update_user_meta($user->ID, $key, $value);
+                }
+            }
+
+            return $errors;
+        }
+        return false;
+    }
 
     public function init()
     {
         if (!is_admin())
-        return;
-    
+            return;
+
         // end html
         $this->html_end();
 
@@ -94,7 +134,11 @@ class UserMetaBox
             array($this, 'render_html')
         );
 
+        // hooks the update functionality for each field
         $this->update_meta_boxes();
+
+        // hooks the validation functionality for each field
+        add_filter('user_profile_update_errors', array($this, 'validate'), 10, 3);
     }
 
 
