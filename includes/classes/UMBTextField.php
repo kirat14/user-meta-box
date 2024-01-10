@@ -6,7 +6,9 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBTextField
+use \yso\interfaces\UMBField;
+
+class UMBTextField implements UMBField
 {
 	public function __construct(
 		public string $name,
@@ -45,7 +47,7 @@ class UMBTextField
 					</label>
 				</th>
 				<td>
-				<input type='text' class='regular-text'{$name}{$id}{$value} />
+					<input type='text' class='regular-text'{$name}{$id}{$value} />
 				</td>
 			</tr>
 			HTML;
@@ -53,7 +55,7 @@ class UMBTextField
 		return $html;
 	}
 
-	public function update($user_id)
+	public function update_field_callback(int $user_id): bool|int
 	{
 		// check that the current user have the capability to edit the $user_id
 		if (!current_user_can('edit_user', $user_id)) {

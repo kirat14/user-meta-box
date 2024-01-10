@@ -62,6 +62,7 @@ use \yso\classes\UserMetaBox;
 use \yso\classes\UMBTextField;
 
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/includes/umb-autoloader.php';
 
 $user_meta_box = new UserMetaBox('My user meta box');
 $fields[] = new UMBTextField(
@@ -71,7 +72,7 @@ $fields[] = new UMBTextField(
 	'Salary Range',
 	[
 		'length' => [
-			['visa_status', 5]
+			['salary_range', 5]
 		]
 	]
 );

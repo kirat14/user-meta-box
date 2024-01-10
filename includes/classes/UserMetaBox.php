@@ -27,12 +27,14 @@ class UserMetaBox
         $this->html = <<<HTML
         <h3>$this->box_title</h3>
         <table class="form-table">
+            <tbody>
         HTML;
     }
 
     private function html_end()
     {
         $this->html .= <<<HTML
+            </tbody>
         </table>
         HTML;
     }
@@ -42,7 +44,7 @@ class UserMetaBox
      * Add fields
      *
      *
-     * @param array $fields of type UMBTextField
+     * @param array $fields of type UMBField
      */
     public function add_fields(array $fields)
     {
@@ -54,6 +56,8 @@ class UserMetaBox
         foreach ($this->fields as $field) {
             $this->html .= $field->genrate_html($user->ID);
         }
+        // end html
+        $this->html_end();
         echo $this->html;
     }
 
@@ -63,13 +67,13 @@ class UserMetaBox
             // Add the save action to user's own profile editing screen update.
             add_action(
                 'personal_options_update',
-                array($field, 'update')
+                array($field, 'update_field_callback')
             );
 
             // Add the save action to user profile editing screen update.
             add_action(
                 'edit_user_profile_update',
-                array($field, 'update')
+                array($field, 'update_field_callback')
             );
 
         }
@@ -84,15 +88,13 @@ class UserMetaBox
             foreach ($this->fields as $field) {
                 if (isset($_POST[$field->name])) {
                     $fields_value[$field->name] = sanitize_text_field($_POST[$field->name]);
-                    $rules = array_merge($rules, $field->rules);
+                    $rules = array_merge_recursive($rules, $field->rules);
                 }
             }
 
             $this->validator = new Validator($fields_value);
+            log_error($rules);
             $this->validator->rules($rules);
-            // Should use add rule 
-            // So not to overwrite rules names
-            //$this->validator->rule()
             
 
             if (!$this->validator->validate()) {
@@ -118,9 +120,6 @@ class UserMetaBox
     {
         if (!is_admin())
             return;
-
-        // end html
-        $this->html_end();
 
         // Add the field to user's own profile editing screen.
         add_action(
