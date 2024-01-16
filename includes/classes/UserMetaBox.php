@@ -93,7 +93,7 @@ class UserMetaBox
             }
 
             $this->validator = new Validator($fields_value);
-            log_error($rules);
+            
             $this->validator->rules($rules);
             
 

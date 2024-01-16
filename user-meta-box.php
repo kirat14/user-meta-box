@@ -35,31 +35,10 @@ define('USERMETABOXDOMAIN', 'user-meta-box');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 
 
-//spl_autoload_register('umb_psr4_autoloader');
-
-/**
- * An example of a project-specific implementation.
- *
- * @param string $class The fully-qualified class name.
- * @return void
- */
-/* function umb_psr4_autoloader($class)
-{
-	// replace namespace separators with directory separators in the relative 
-	// class name, append with .php
-	$class_path = str_replace('yso\\', '', $class);
-	$class_path = str_replace('\\', DIRECTORY_SEPARATOR, $class_path);
-	$class_path = str_replace('/', DIRECTORY_SEPARATOR, $class_path);
-
-	$file = __DIR__ . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . $class_path . '.php';
-
-	// if the file exists, require it
-	if (file_exists($file)) {
-		require $file;
-	}
-} */
 use \yso\classes\UserMetaBox;
 use \yso\classes\UMBTextField;
+use \yso\classes\UMBSelectField;
+use \yso\classes\UMBCheckboxField;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/includes/umb-autoloader.php';
@@ -86,6 +65,28 @@ $fields[] = new UMBTextField(
 		'length' => [
 			['visa_status', 2]
 		]
+	]
+);
+
+$fields[] = new UMBSelectField(
+	'yso-degree',
+	'yso-degree',
+	'master',
+	['Bachelor', 'Master'],
+	'Degree',
+	[
+		
+	]
+);
+
+$fields[] = new UMBCheckboxField(
+	'yso-admin',
+	'yso-admin',
+	false,
+	'Is admin',
+	'This text to be prepended after the checkbox',
+	[
+		
 	]
 );
 

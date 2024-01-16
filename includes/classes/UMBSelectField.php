@@ -6,12 +6,13 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBTextField extends UMBField
+class UMBSelectField extends UMBField
 {
 	public function __construct(
 		public string $name,
 		public string $id,
 		public string $value,
+		public array $options,
 		public string $lable,
 		public array $rules,
 		public string $extra_attr = ''
@@ -30,12 +31,24 @@ class UMBTextField extends UMBField
 		$name = " name='{$this->name}'";
 		$id = " id='{$this->id}'";
 		// Check if the user meta has been already added
-		$value = esc_attr( get_user_meta( $user_id, $this->name, true ) );
-		
-		if(!empty($this->value))
+		$value = esc_attr(get_user_meta($user_id, $this->name, true));
+
+
+		if (!empty($value))
 			$this->value = $value;
 
-		$value = " value='{$this->value}'";
+		$counter = -1;
+		$select_html = array_map(function ($item) use (&$counter) {
+			$selected = '';
+			$counter++;
+			if ($counter == $this->value)
+				$selected = "selected = selected";
+			return "<option value=\"$counter\" {$selected}>{$item}</option>";
+		}, $this->options);
+
+		$select_html = implode('', $select_html);
+		$select_html = "<select {$name}{$id}{$value}>" . $select_html . "</select>";
+
 		// Generate html
 		$html = <<<HTML
 			<tr>
@@ -45,7 +58,7 @@ class UMBTextField extends UMBField
 					</label>
 				</th>
 				<td>
-					<input type='text' class='regular-text'{$name}{$id}{$value} />
+					$select_html
 				</td>
 			</tr>
 			HTML;
