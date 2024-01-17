@@ -23,6 +23,20 @@ abstract class UMBField
      */
     abstract public function genrate_html($user_id): string;
 
+    public function field_attr($user_id): array
+    {
+        $name = " name='{$this->name}'";
+        $id = " id='{$this->id}'";
+        // Check if the user meta has been already added
+        $value = esc_attr(get_user_meta($user_id, $this->name, true));
+
+
+        if (!empty($value))
+            $this->value = $value;
+
+        return [$name, $id, $value];
+    }
+
     public function update_field_callback(int $user_id): bool|int
     {
         // check that the current user have the capability to edit the $user_id
@@ -31,12 +45,12 @@ abstract class UMBField
         }
 
         $new_value = "";
-        if(isset($_POST[$this->name]))
+        if (isset($_POST[$this->name]))
             $new_value = $_POST[$this->name];
 
         $rslt = update_user_meta(
             $user_id,
-            $this->name,
+            'umb-' . $this->name,
             $new_value
         );
 

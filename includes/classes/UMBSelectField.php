@@ -28,14 +28,7 @@ class UMBSelectField extends UMBField
 	 */
 	public function genrate_html($user_id): string
 	{
-		$name = " name='{$this->name}'";
-		$id = " id='{$this->id}'";
-		// Check if the user meta has been already added
-		$value = esc_attr(get_user_meta($user_id, $this->name, true));
-
-
-		if (!empty($value))
-			$this->value = $value;
+		[$name, $id, $value] = $this->field_attr($user_id);
 
 		$counter = -1;
 		$select_html = array_map(function ($item) use (&$counter) {

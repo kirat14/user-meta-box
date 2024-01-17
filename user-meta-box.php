@@ -5,7 +5,8 @@ Plugin Name: User Meta Box
 Description: Welcome to WordPress plugin development.
 Plugin URI:  https://moumini.tarik.online
 Author:      Tarik Moumini
-Version:     1.0
+Version:     1.0.0
+Requires PHP:      8.0
 License:     GPLv2 or later
 Text Domain: user-meta-box
 Domain Path: /languages/
@@ -30,6 +31,7 @@ if (!defined('ABSPATH')) {
 	exit;
 
 }
+
 
 define('USERMETABOXDOMAIN', 'user-meta-box');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
@@ -94,4 +96,6 @@ $fields[] = new UMBCheckboxField(
 $user_meta_box->add_fields($fields);
 
 $user_meta_box->init();
+
+
 
