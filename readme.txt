@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== User Meta Box - WordPress User Custom Fields Framework ===
 
 Plugin Name:  User Meta Box
 Description:  comming soon
