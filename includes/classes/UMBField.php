@@ -15,6 +15,10 @@ abstract class UMBField
     public array $rules;
     public string $extra_attr = '';
 
+    protected function __construct(){
+        $this->name = 'umb-' . $this->name;
+    }
+
     /**
      * Get field HTML
      *
@@ -50,7 +54,7 @@ abstract class UMBField
 
         $rslt = update_user_meta(
             $user_id,
-            'umb-' . $this->name,
+            $this->name,
             $new_value
         );
 

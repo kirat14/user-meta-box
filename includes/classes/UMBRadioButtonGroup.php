@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBSelectField extends UMBField
+class UMBRadioButtonGroup extends UMBField
 {
 	public function __construct(
 		public string $name,
@@ -31,16 +31,28 @@ class UMBSelectField extends UMBField
 		[$name, $id, $value] = $this->field_attr($user_id);
 
 		$counter = -1;
-		$select_html = array_map(function ($item) use (&$counter) {
-			$selected = '';
+		$options_size = count($this->options);
+		$radioBtn_group_html = array_map(function ($item) use (&$counter, $name, $id, $value, $options_size) {
+			$checked = '';
+			$radioHtml = '';
 			$counter++;
+
 			if ($counter == $this->value)
-				$selected = "selected = selected";
-			return "<option value=\"$counter\" {$selected}>{$item}</option>";
+				$checked = "checked = checked";
+
+			if($counter + 1 == $options_size)
+				$radioHtml .= '<br>';
+
+			$radioHtml .= <<<RADIOHTML
+				<label>
+					<input type="radio" value="$counter" $checked{$name}>
+					$item
+				</label>
+			RADIOHTML;
+			return $radioHtml;
 		}, $this->options);
 
-		$select_html = implode('', $select_html);
-		$select_html = "<select {$name}{$id}{$value}>" . $select_html . "</select>";
+		$radioBtn_group_html = implode('', $radioBtn_group_html);
 
 		// Generate html
 		$html = <<<HTML
@@ -51,7 +63,7 @@ class UMBSelectField extends UMBField
 					</label>
 				</th>
 				<td>
-					$select_html
+					$radioBtn_group_html
 				</td>
 			</tr>
 			HTML;

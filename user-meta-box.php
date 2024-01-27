@@ -32,6 +32,14 @@ if (!defined('ABSPATH')) {
 
 }
 
+/**
+ * My debuggin function
+*/
+function log_error($object) {
+	error_log(print_r('$object', true));
+	error_log(print_r($object, true));
+}
+
 
 define('USERMETABOXDOMAIN', 'user-meta-box');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
@@ -41,12 +49,14 @@ use \yso\classes\UserMetaBox;
 use \yso\classes\UMBTextField;
 use \yso\classes\UMBSelectField;
 use \yso\classes\UMBCheckboxField;
+use \yso\classes\UMBRadioButtonGroup;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/includes/umb-autoloader.php';
 
+
 $user_meta_box = new UserMetaBox('My user meta box');
-$fields[] = new UMBTextField(
+/* $fields[] = new UMBTextField(
 	'salary_range',
 	'yso_salary_range',
 	'90000',
@@ -87,6 +97,17 @@ $fields[] = new UMBCheckboxField(
 	false,
 	'Is admin',
 	'This text to be prepended after the checkbox',
+	[
+		
+	]
+); */
+
+$fields[] = new UMBRadioButtonGroup(
+	'yso-degree',
+	'yso-degree',
+	0,
+	['Bachelor', 'Master'],
+	'Degree',
 	[
 		
 	]

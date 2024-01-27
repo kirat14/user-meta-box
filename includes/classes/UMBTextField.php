@@ -16,7 +16,7 @@ class UMBTextField extends UMBField
 		public array $rules,
 		public string $extra_attr = ''
 	) {
-
+		parent::__construct();
 	}
 
 	/**
