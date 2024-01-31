@@ -47,9 +47,8 @@ $json = file_get_contents($jsonFieldsPath . "\demo-data.json");
 if ($json !== false) {
 	$obj = json_decode($json);
 
-	$fields = array();
 	foreach ($obj as $item) {
-
+		$fields = array();
 		$user_meta_box = new UserMetaBox($item->boxTitle);
 		foreach ($item->fields as $field) {
 			$type = $field->type;
