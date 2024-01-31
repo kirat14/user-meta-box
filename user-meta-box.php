@@ -27,96 +27,98 @@ with this program. If not, visit: https://www.gnu.org/licenses/
 
 // exit if file is called directly
 if (!defined('ABSPATH')) {
-
 	exit;
-
 }
 
-/**
- * My debuggin function
-*/
-function log_error($object) {
-	error_log(print_r('$object', true));
-	error_log(print_r($object, true));
-}
+require __DIR__ . '/vendor/autoload.php';
+
+use \yso\classes\UserMetaBox;
+use \yso\classes\UMBInputField;
 
 
 define('USERMETABOXDOMAIN', 'user-meta-box');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 
 
-use \yso\classes\UserMetaBox;
-use \yso\classes\UMBTextField;
-use \yso\classes\UMBSelectField;
-use \yso\classes\UMBCheckboxField;
-use \yso\classes\UMBRadioButtonGroup;
 
-require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/includes/umb-autoloader.php';
+$jsonFieldsPath = dirname(plugin_dir_path(__FILE__));
+$json = file_get_contents($jsonFieldsPath . "\demo-data.json");
+// Check if a json file exists
+if ($json !== false) {
+	$obj = json_decode($json);
 
+	$fields = array();
+	foreach ($obj as $item) {
 
-$user_meta_box = new UserMetaBox('My user meta box');
-/* $fields[] = new UMBTextField(
-	'salary_range',
-	'yso_salary_range',
-	'90000',
-	'Salary Range',
-	[
-		'length' => [
-			['salary_range', 5]
-		]
-	]
-);
+		$user_meta_box = new UserMetaBox($item->boxTitle);
+		foreach ($item->fields as $field) {
+			$type = $field->type;
 
-$fields[] = new UMBTextField(
-	'visa_status',
-	'yso_visa_status',
-	'F1',
-	'Visa Status',
-	[
-		'length' => [
-			['visa_status', 2]
-		]
-	]
-);
+			// Check if name or id is set
+			if(!isset($field->name) && !isset($field->id))
+			 continue;
+			else {
+				if(isset($field->name))
+				 $field->id = $field->name;
+				else
+					$field->name = $field->id;
+			}
 
-$fields[] = new UMBSelectField(
-	'yso-degree',
-	'yso-degree',
-	'master',
-	['Bachelor', 'Master'],
-	'Degree',
-	[
-		
-	]
-);
+			if (in_array($type, ['text', 'email', 'password'])) {
+				$fields[] = new UMBInputField(
+					$field->name,
+					$field->id,
+					$field->defaultValue ?? '',
+					$field->label ?? '',
+					$type,
+					$field->rules ?? [],
+					$field->extraAttr ?? ''
+				);
+				continue;
+			}
 
-$fields[] = new UMBCheckboxField(
-	'yso-admin',
-	'yso-admin',
-	false,
-	'Is admin',
-	'This text to be prepended after the checkbox',
-	[
-		
-	]
-); */
+			$className = '\yso\classes\UMB' . ucfirst($type) . 'Field';
 
-$fields[] = new UMBRadioButtonGroup(
-	'yso-degree',
-	'yso-degree',
-	0,
-	['Bachelor', 'Master'],
-	'Degree',
-	[
-		
-	]
-);
+			if ($type === 'checkbox') {
+				$fields[] = new $className(
+					$field->name,
+					$field->id,
+					$field->defaultValue,
+					$field->label,
+					$field->prepend,
+					$field->rules,
+					$field->extraAttr
+				);
+				continue;
+			}
 
+			$fields[] = new $className(
+				$field->name,
+				$field->id,
+				$field->defaultValue,
+				$field->options,
+				$field->label,
+				$field->rules,
+				$field->extraAttr
+			);
+		}
 
-$user_meta_box->add_fields($fields);
-
-$user_meta_box->init();
+		$user_meta_box->add_fields($fields);
+		$user_meta_box->init();
+	}
+}
 
 
 
+
+
+
+
+/**
+ * My debuggin function
+ */
+function log_error($object)
+{
+	error_log(print_r('$object', true));
+	error_log(print_r($object, true));
+}

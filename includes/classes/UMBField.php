@@ -50,7 +50,7 @@ abstract class UMBField
 
         $new_value = "";
         if (isset($_POST[$this->name]))
-            $new_value = $_POST[$this->name];
+            $new_value = sanitize_text_field($_POST[$this->name]);
 
         $rslt = update_user_meta(
             $user_id,

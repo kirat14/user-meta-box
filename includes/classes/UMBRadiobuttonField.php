@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBRadioButtonGroup extends UMBField
+class UMBRadiobuttonField extends UMBField
 {
 	public function __construct(
 		public string $name,

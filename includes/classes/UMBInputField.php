@@ -6,13 +6,16 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBTextField extends UMBField
-{
+use UMBYSO\Enums\inputType;
+
+class UMBInputField extends UMBField
+{	
 	public function __construct(
 		public string $name,
 		public string $id,
 		public string $value,
 		public string $lable,
+		public string $type,
 		public array $rules,
 		public string $extra_attr = ''
 	) {
@@ -40,7 +43,7 @@ class UMBTextField extends UMBField
 					</label>
 				</th>
 				<td>
-					<input type='text' class='regular-text'{$name}{$id}{$value} />
+					<input type="{$this->type}" class='regular-text'{$name}{$id}{$value} />
 				</td>
 			</tr>
 			HTML;
