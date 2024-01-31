@@ -1,0 +1,35 @@
+[
+    {
+        "boxTitle": "Student section",
+        "fields": [
+            {
+                "type": "text",
+                "name": "student-id",
+                "id": "student-id",
+                "defaultValue": "4612579",
+                "label": "Student ID",
+                "rules": [],
+                "extraAttr": ""
+            },
+            {
+                "type": "email",
+                "name": "student-email",
+                "id": "student-email",
+                "defaultValue": "student@university.edu",
+                "label": "Student Email",
+                "rules": [],
+                "extraAttr": ""
+            },
+            {
+                "type": "select",
+                "name": "student-degree",
+                "id": "student-degree",
+                "defaultValue": 0,
+                "options": ["Bachelor", "Master"],
+                "label": "Student Degree",
+                "rules": [],
+                "extraAttr": ""
+            }
+        ]
+    }
+]
