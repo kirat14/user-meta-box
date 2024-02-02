@@ -1,10 +1,11 @@
 <?php
 
 /*
-Plugin Name: User Meta Box
-Description: Welcome to WordPress plugin development.
-Plugin URI:  https://moumini.tarik.online
+Plugin Name: User Meta Data
+Description: This plugin simplifies the process of adding additional fields to the WordPress user profile screen by utilizing a JSON file.
+Plugin URI:  #
 Author:      Tarik Moumini
+Author URI: https://moumini.tarik.online
 Version:     1.0.0
 Requires PHP:      8.0
 License:     GPLv2 or later
