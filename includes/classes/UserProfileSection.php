@@ -9,9 +9,9 @@ if (!defined('ABSPATH')) {
 
 use Valitron\Validator;
 
-class UserMetaBox
+class UserProfileSection
 {
-    private array $fields;
+    public array $fields;
     private string $html;
     private Validator $validator;
     public function __construct(private string $box_title)
@@ -37,18 +37,6 @@ class UserMetaBox
             </tbody>
         </table>
         HTML;
-    }
-
-    // this should be converted to registery/dependency injection pattern
-    /**
-     * Add fields
-     *
-     *
-     * @param array $fields of type UMBField
-     */
-    public function add_fields(array $fields)
-    {
-        $this->fields = $fields;
     }
 
     public function render_html($user)
