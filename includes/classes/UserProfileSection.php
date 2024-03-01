@@ -22,6 +22,38 @@ class UserProfileSection
         $this->html_start();
     }
 
+
+    public function add_fields($fields)
+    {
+        foreach ($fields as $field) {
+
+            // Check if name or id is set
+            if (!isset($field->name))
+                continue;
+            else {
+                if (!isset($field->id))
+                    $field->id = $field->name;
+            }
+
+            $this->fields[] = UMBFactoryInput::build($field);
+        }
+    }
+
+    /* private function create_checkbox($userProfileSection, $field, $className)
+	{
+		$userProfileSection->fields[] = new $className(
+			$field->name,
+			$field->id,
+			$field->defaultValue,
+			$field->label,
+			$field->prepend,
+			$field->rules,
+			$field->extraAttr
+		);
+	} */
+
+
+
     private function html_start()
     {
         $this->html = <<<HTML
@@ -63,7 +95,6 @@ class UserProfileSection
                 'edit_user_profile_update',
                 array($field, 'update_field_callback')
             );
-
         }
     }
 
@@ -81,9 +112,9 @@ class UserProfileSection
             }
 
             $this->validator = new Validator($fields_value);
-            
+
             $this->validator->rules($rules);
-            
+
 
             if (!$this->validator->validate()) {
                 $validator_errors = $this->validator->errors();
@@ -127,6 +158,4 @@ class UserProfileSection
         // hooks the validation functionality for each field
         add_filter('user_profile_update_errors', array($this, 'validate'), 10, 3);
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace yso\classes;
 
 // disable direct file access
@@ -8,14 +9,15 @@ if (!defined('ABSPATH')) {
 
 abstract class UMBField
 {
-    public string $name;
-    public string $id;
-    public string $value;
-    public string $lable;
-    public array $rules;
-    public string $extra_attr = '';
 
-    protected function __construct(){
+    protected function __construct(
+        public string $name,
+        public string $id,
+        public string $value,
+        public string $lable,
+        public array $rules,
+        public string $extra_attr = ''
+    ) {
         $this->name = 'umb-' . $this->name;
     }
 
@@ -60,6 +62,5 @@ abstract class UMBField
 
         // create/update user meta for the $user_id
         return $rslt;
-
     }
 }

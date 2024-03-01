@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
 require __DIR__ . '/vendor/autoload.php';
 
 use \yso\classes\UserProfileSection;
-use \yso\classes\UMBInputField;
+use \yso\classes\UMBFactoryInput;
 
 
 define('USERMETABOXDOMAIN', 'user-meta-box');
@@ -55,11 +55,12 @@ class UserMetaData
 		$this->read_json_user_data();
 		// Check if a json file exists
 		if ($this->json !== false) {
-			$obj = json_decode($this->json);
+			$json_objs = json_decode($this->json);
 
-			foreach ($obj as $section) {
-				$userProfileSection = new UserProfileSection($section->boxTitle);
-				$this->generate_fields($section, $userProfileSection);
+
+			foreach ($json_objs as $json_obj) {
+				$userProfileSection = new UserProfileSection($json_obj->boxTitle);
+				$userProfileSection->add_fields($json_obj->fields);
 				$userProfileSection->init();
 			}
 		}
@@ -71,81 +72,19 @@ class UserMetaData
 		$this->json = file_get_contents($jsonFieldsPath . "\demo-data.json");
 	}
 
-	function generate_fields($section, $userProfileSection)
-	{
-		foreach ($section->fields as $field) {
-
-			// Check if name or id is set
-			if (!isset($field->name) && !isset($field->id))
-				continue;
-			else {
-				if (isset($field->name))
-					$field->id = $field->name;
-				else
-					$field->name = $field->id;
-			}
-			if (in_array($field->type, ['text', 'email', 'password'])) {
-				$this->create_input_field($userProfileSection, $field);
-				continue;
-			}
-
-			$className = '\yso\classes\UMB' . ucfirst($field->type) . 'Field';
-
-			if ($field->type === 'checkbox') {
-				$this->create_checkbox($userProfileSection, $field, $className);
-				continue;
-			}
-
-			$userProfileSection->fields[] = new $className(
-				$field->name,
-				$field->id,
-				$field->defaultValue,
-				$field->options,
-				$field->label,
-				$field->rules,
-				$field->extraAttr
-			);
-		}
-	}
-
-	private function create_input_field($userProfileSection, $field)
-	{
-		$userProfileSection->fields[] = new UMBInputField(
-			$field->name,
-			$field->id,
-			$field->defaultValue ?? '',
-			$field->label ?? '',
-			$field->type,
-			$field->rules ?? [],
-			$field->extraAttr ?? ''
-		);
-	}
-
-	private function create_checkbox($userProfileSection, $field, $className)
-	{
-		$userProfileSection->fields[] = new $className(
-			$field->name,
-			$field->id,
-			$field->defaultValue,
-			$field->label,
-			$field->prepend,
-			$field->rules,
-			$field->extraAttr
-		);
-	}
 
 
 
-	private function activate()
+	public function activate()
 	{
 
 	}
 
-	private function deactivate()
+	public function deactivate()
 	{
 
 	}
-	private function uninstall()
+	public function uninstall()
 	{
 
 	}

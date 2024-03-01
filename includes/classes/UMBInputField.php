@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-use UMBYSO\Enums\inputType;
 
 class UMBInputField extends UMBField
 {	
@@ -19,7 +18,7 @@ class UMBInputField extends UMBField
 		public array $rules,
 		public string $extra_attr = ''
 	) {
-		parent::__construct();
+		parent::__construct($name, $id, $value, $lable, $rules, $extra_attr);
 	}
 
 	/**
