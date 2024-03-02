@@ -17,7 +17,7 @@ class UMBRadiobuttonField extends UMBField
 		public array $rules,
 		public string $extra_attr = ''
 	) {
-		parent::__construct();
+		parent::__construct($name, $id, $value, $lable, $rules, $extra_attr);
 	}
 
 	/**
@@ -28,16 +28,17 @@ class UMBRadiobuttonField extends UMBField
 	 */
 	public function genrate_html($user_id): string
 	{
-		[$name, $id, $value] = $this->field_attr($user_id);
+		[$name, $id] = $this->field_attr($user_id);
 
 		$counter = -1;
 		$options_size = count($this->options);
-		$radioBtn_group_html = array_map(function ($item) use (&$counter, $name, $id, $value, $options_size) {
+		$radioBtn_group_html = array_map(function ($item) use (&$counter, $name, $id, $options_size) {
 			$checked = '';
 			$radioHtml = '';
 			$counter++;
+			$item_lable = ucfirst($item);
 
-			if ($counter == $this->value)
+			if ($item == $this->value)
 				$checked = "checked = checked";
 
 			if($counter + 1 == $options_size)
@@ -45,8 +46,8 @@ class UMBRadiobuttonField extends UMBField
 
 			$radioHtml .= <<<RADIOHTML
 				<label>
-					<input type="radio" value="$counter" $checked{$name}>
-					$item
+					<input type="radio" value="$item" $checked{$name}>
+					$item_lable
 				</label>
 			RADIOHTML;
 			return $radioHtml;

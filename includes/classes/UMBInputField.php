@@ -29,7 +29,7 @@ class UMBInputField extends UMBField
 	 */
 	public function genrate_html($user_id): string
 	{
-		[$name, $id, $value] = $this->field_attr($user_id);
+		[$name, $id] = $this->field_attr($user_id);
 
 
 		$value = " value='{$this->value}'";

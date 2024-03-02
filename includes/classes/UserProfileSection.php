@@ -39,19 +39,6 @@ class UserProfileSection
         }
     }
 
-    /* private function create_checkbox($userProfileSection, $field, $className)
-	{
-		$userProfileSection->fields[] = new $className(
-			$field->name,
-			$field->id,
-			$field->defaultValue,
-			$field->label,
-			$field->prepend,
-			$field->rules,
-			$field->extraAttr
-		);
-	} */
-
 
 
     private function html_start()

@@ -28,7 +28,7 @@ class UMBSelectField extends UMBField
 	 */
 	public function genrate_html($user_id): string
 	{
-		[$name, $id, $value] = $this->field_attr($user_id);
+		[$name, $id] = $this->field_attr($user_id);
 
 		$counter = -1;
 		$select_html = array_map(function ($item) use (&$counter) {
@@ -40,7 +40,7 @@ class UMBSelectField extends UMBField
 		}, $this->options);
 
 		$select_html = implode('', $select_html);
-		$select_html = "<select {$name}{$id}{$value}>" . $select_html . "</select>";
+		$select_html = "<select {$name}{$id}>" . $select_html . "</select>";
 
 		// Generate html
 		$html = <<<HTML

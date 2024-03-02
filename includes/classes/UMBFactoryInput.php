@@ -16,13 +16,19 @@ class UMBFactoryInput
         $properties = array_values((array) $properties);
         if (in_array($field_type, ['text', 'email', 'password']))
             $field_type = 'InputField';
-        elseif ($field_type == 'select') {
+        else {
             // When destruction the array we should get rid of the select
             // since we don't need it when constructing the selectField
-            if(isset($properties[5]) && $properties[5] == 'select'){
+            if (isset($properties[5]) && in_array($properties[5], ['select', 'radio', 'check'])) {
                 unset($properties[5]);
             }
-            $field_type = 'SelectField';
+            if ($field_type == 'select') {
+                $field_type = 'SelectField';
+            } elseif ($field_type == 'radio') {
+                $field_type = 'RadiobuttonField';
+            } elseif ($field_type == 'check') {
+                $field_type = 'CheckboxField';
+            }
         }
 
 
