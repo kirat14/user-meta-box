@@ -15,10 +15,9 @@ class UMBCheckboxField extends UMBField
 		public string $value,
 		public array $options,
 		public string $lable,
-		public array $rules,
 		public string $extra_attr = ''
 	) {
-		parent::__construct($name, $id, $value, $lable, $rules, $extra_attr);
+		parent::__construct($name, $id, $value, $lable, $extra_attr);
 	}
 
 
@@ -28,49 +27,31 @@ class UMBCheckboxField extends UMBField
 		$id = " id='{$this->id}'";
 
 		// Retrieve the user meta as an array
-		$this->value = get_user_meta($user_id, $this->name, true);
-		$this->value = get_user_meta($user_id, $this->name, true);
+		$user_meta = get_user_meta($user_id, $this->name, true);
+		if(is_array($user_meta))
+			$this->value = ',' . implode(',', $user_meta) . ',';
 
 		return [$name, $id];
 	}
 
 
-	/* public function update_field_callback(int $user_id): bool|int
-	{
-
-		// check that the current user has the capability to edit the $user_id
-		if (!current_user_can('edit_user', $user_id)) {
-			return false;
-		}
-
-		$new_value = isset($_POST[$this->name]) ? $_POST[$this->name] : array();
-		
-		// Sanitize each value in the array
-		//$sanitized_values = array_map('sanitize_text_field', $new_value);
-
-		$rslt = update_user_meta(
-			$user_id,
-			$this->name,
-			'Tarik'
-		);
-
-		// create/update user meta for the $user_id
-		return $rslt;
-	} */
-
-
-
-
-	private function get_checkbox_html($item, $name, $id, $checked)
+	private function get_checkbox_html($option, $name, $id, $checked)
 	{
 		$html = <<<CHECK
 			<label for="{$id}">
-				<input type="checkbox" $checked{$name}{$id} value="{$item->value}" />
-				{$item->lable}
+				<input type="checkbox" $checked{$name}{$id} value="{$option->value}" />
+				{$option->label}
 			</label> <br>
 		CHECK;
 
 		return $html;
+	}
+
+	private function checked($value){
+		
+		if($this->value && str_contains($this->value, ',' . $value . ','))
+				return " checked = checked";
+		return '';
 	}
 
 	/**
@@ -81,18 +62,14 @@ class UMBCheckboxField extends UMBField
 	 */
 	public function genrate_html($user_id): string
 	{
-		[$name, $id] = $this->field_attr($user_id, '[]');
-
-		$checkboxs_html = array_map(function ($item) use (&$name, &$id) {
-			$checked = '';
-			if ($item->value == $this->value)
-				$checked = "checked = checked";
-
-
-			return $this->get_checkbox_html($item, $name, $id, $checked);
-		}, $this->options);
-
-		$checkboxs_html = implode($checkboxs_html);
+		[$name, $id] = $this->field_attr($user_id);
+	
+		$checkboxs_html = '';
+		// $this->value contains checked checkboxes values comma seperated
+		foreach ($this->options as $option) {
+			$checked = $this->checked($option->value);
+			$checkboxs_html .= $this->get_checkbox_html($option, $name, $id, $checked);
+		}
 
 		// Generate html
 		$html = <<<HTML
