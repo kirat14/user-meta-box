@@ -14,7 +14,7 @@ class UserProfileSection
     public array $fields;
     private string $html;
     private Validator $validator;
-    public function __construct(private string $box_title)
+    public function __construct(private string $box_title, private $rules)
     {
         // Determines whether the current request is for an administrative interface page.
         if (!is_admin())
@@ -68,42 +68,36 @@ class UserProfileSection
         echo $this->html;
     }
 
-    private function update_meta_boxes(): void
+    private function validate(&$fields_values, &$fields_labels)
     {
+        // Setup the validation params
         foreach ($this->fields as $field) {
-            // Add the save action to user's own profile editing screen update.
-            add_action(
-                'personal_options_update',
-                array($field, 'update_field_callback')
-            );
 
-            // Add the save action to user profile editing screen update.
-            add_action(
-                'edit_user_profile_update',
-                array($field, 'update_field_callback')
-            );
+            if (isset($_POST[$field->name])) {
+                $fields_values[$field->name] = is_array($_POST[$field->name]) ? $_POST[$field->name] : sanitize_text_field($_POST[$field->name]);
+                $fields_labels[$field->name] = $field->label;
+            } else {
+                $_POST[$field->name] = '';
+                $fields_values[$field->name] = '';
+            }
         }
+
+        $this->validator = new Validator($fields_values);
+
+        $this->validator->labels($fields_labels);
+        $this->validator->rules($this->rules);
+
+        return $this->validator->validate();
     }
 
-    public function validate($errors, $update, $user)
+    public function update_custom_meta($errors, $update, $user)
     {
         if (isset($user)) {
-            $fields_value = array();
-            $rules = array();
 
-            foreach ($this->fields as $field) {
-                if (isset($_POST[$field->name])) {
-                    $fields_value[$field->name] = sanitize_text_field($_POST[$field->name]);
-                    $rules = array_merge_recursive($rules, $field->rules);
-                }
-            }
+            $fields_values = [];
+            $fields_labels = [];
 
-            $this->validator = new Validator($fields_value);
-
-            $this->validator->rules($rules);
-
-
-            if (!$this->validator->validate()) {
+            if (!$this->validate($fields_values, $fields_labels)) {
                 $validator_errors = $this->validator->errors();
                 foreach ($validator_errors as $field_name => $list_of_errors) {
                     for ($i = 0; $i < count($list_of_errors); $i++) {
@@ -111,7 +105,7 @@ class UserProfileSection
                     }
                 }
             } else {
-                foreach ($fields_value as $key => $value) {
+                foreach ($fields_values as $key => $value) {
                     // Valid phone number, save it
                     update_user_meta($user->ID, $key, $value);
                 }
@@ -139,10 +133,7 @@ class UserProfileSection
             array($this, 'render_html')
         );
 
-        // hooks the update functionality for each field
-        $this->update_meta_boxes();
-
         // hooks the validation functionality for each field
-        add_filter('user_profile_update_errors', array($this, 'validate'), 10, 3);
+        add_filter('user_profile_update_errors', array($this, 'update_custom_meta'), 10, 3);
     }
 }

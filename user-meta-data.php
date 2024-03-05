@@ -27,14 +27,14 @@ with this program. If not, visit: https://www.gnu.org/licenses/
 */
 
 // exit if file is called directly
-if (!defined('ABSPATH')) {
+/* if (!defined('ABSPATH')) {
 	exit;
-}
+} */
+
 
 require __DIR__ . '/vendor/autoload.php';
 
 use \yso\classes\UserProfileSection;
-use \yso\classes\UMBFactoryInput;
 
 
 define('USERMETABOXDOMAIN', 'user-meta-box');
@@ -44,10 +44,8 @@ define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 class UserMetaData
 {
 	private string $json;
-	private array $fields;
 	function __construct()
 	{
-
 	}
 
 	public function init()
@@ -59,7 +57,11 @@ class UserMetaData
 
 
 			foreach ($json_objs as $json_obj) {
-				$userProfileSection = new UserProfileSection($json_obj->boxTitle);
+				$rules = [];
+				if(property_exists($json_obj, 'rules'))
+					$rules = $json_obj->rules;
+
+				$userProfileSection = new UserProfileSection($json_obj->boxTitle, $rules);
 				$userProfileSection->add_fields($json_obj->fields);
 				$userProfileSection->init();
 			}
@@ -70,6 +72,7 @@ class UserMetaData
 	{
 		$jsonFieldsPath = dirname(plugin_dir_path(__FILE__));
 		$this->json = file_get_contents($jsonFieldsPath . "\demo-data.json");
+		$this->json = str_replace("{*}", "umb-", $this->json);
 	}
 
 
@@ -77,16 +80,13 @@ class UserMetaData
 
 	public function activate()
 	{
-
 	}
 
 	public function deactivate()
 	{
-
 	}
 	public function uninstall()
 	{
-
 	}
 }
 
@@ -109,6 +109,28 @@ register_activation_hook(__FILE__, array($userMetaData, 'deactivate'));
  */
 function log_error($object)
 {
-	error_log(print_r('$object', true));
+	error_log(print_r('--------------------', true));
 	error_log(print_r($object, true));
 }
+
+
+
+
+//add_filter('query', 'log_update_user_meta_query', 10, 2);
+
+function log_update_user_meta_query($query, $query_type = '')
+{
+    global $wpdb;
+
+    // Check if the current query is an update query
+    if (strpos($query, "wp_usermeta") !== false && strpos($query, "UPDATE") !== false) {
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 20);
+
+        // Log the update user meta query and the backtrace
+        error_log('Update User Meta Query: ' . $query);
+        error_log('Backtrace: ' . print_r($backtrace, true));
+    }
+
+    return $query;
+}
+

@@ -14,10 +14,9 @@ class UMBSelectField extends UMBField
 		public string $value,
 		public array $options,
 		public string $lable,
-		public array $rules,
 		public string $extra_attr = ''
 	) {
-		parent::__construct($name, $id, $value, $lable, $rules, $extra_attr);
+		parent::__construct($name, $id, $value, $lable, $extra_attr);
 	}
 
 	/**

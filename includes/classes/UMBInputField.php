@@ -15,10 +15,9 @@ class UMBInputField extends UMBField
 		public string $value,
 		public string $lable,
 		public string $type,
-		public array $rules,
 		public string $extra_attr = ''
 	) {
-		parent::__construct($name, $id, $value, $lable, $rules, $extra_attr);
+		parent::__construct($name, $id, $value, $lable, $extra_attr);
 	}
 
 	/**
