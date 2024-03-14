@@ -1,8 +1,0 @@
-if ($meta_key == 'umb-student-sex') {
-		error_log('-------------');
-		log_error($user_id);
-		log_error($meta_key);
-		log_error($meta_value);
-		error_log('-------------');
-		error_log('Backtrace: ' . print_r($backtrace, true));
-	}
