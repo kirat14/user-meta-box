@@ -34,73 +34,29 @@ with this program. If not, visit: https://www.gnu.org/licenses/
 
 require __DIR__ . '/vendor/autoload.php';
 
-use \yso\classes\UserProfileSection;
+use \yso\classes\UserMetaData;
 
 
-define('USERMETABOXDOMAIN', 'user-meta-box');
+define('USERMETABOXDOMAIN', 'user-meta-data');
 define('USERMETABOXPATH', plugin_dir_path(__FILE__));
 
 
-class UserMetaData
-{
-	private string $json;
-	function __construct()
-	{
-	}
 
-	public function init()
-	{
-		$this->read_json_user_data();
-		// Check if a json file exists
-		if ($this->json !== false) {
-			$json_objs = json_decode($this->json);
-
-
-			foreach ($json_objs as $json_obj) {
-				$rules = [];
-				if(property_exists($json_obj, 'rules'))
-					$rules = $json_obj->rules;
-
-				$userProfileSection = new UserProfileSection($json_obj->boxTitle, $rules);
-				$userProfileSection->add_fields($json_obj->fields);
-				$userProfileSection->init();
-			}
-		}
-	}
-
-	function read_json_user_data()
-	{
-		$jsonFieldsPath = dirname(plugin_dir_path(__FILE__));
-		$this->json = file_get_contents($jsonFieldsPath . "\demo-data.json");
-		$this->json = str_replace("{*}", "umb-", $this->json);
-	}
-
-
-
-
-	public function activate()
-	{
-	}
-
-	public function deactivate()
-	{
-	}
-	public function uninstall()
-	{
-	}
+/**
+ * Loads the User Meta data class.
+ *
+ *
+ * @return void
+ */
+function __user_meta_data_instance() {
+	UserMetaData::instance();
 }
 
-$userMetaData = new UserMetaData();
-$userMetaData->init();
 
-// activation
-register_activation_hook(__FILE__, array($userMetaData, 'activate'));
-// deactivation
-register_activation_hook(__FILE__, array($userMetaData, 'deactivate'));
-
-
-
-
+if ( class_exists( UserMetaData::class ) ) {
+	// Initialize the main autoloaded class.
+	add_action( 'plugins_loaded', '__user_meta_data_instance' );
+}
 
 
 
@@ -111,26 +67,5 @@ function log_error($object)
 {
 	error_log(print_r('--------------------', true));
 	error_log(print_r($object, true));
-}
-
-
-
-
-//add_filter('query', 'log_update_user_meta_query', 10, 2);
-
-function log_update_user_meta_query($query, $query_type = '')
-{
-    global $wpdb;
-
-    // Check if the current query is an update query
-    if (strpos($query, "wp_usermeta") !== false && strpos($query, "UPDATE") !== false) {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 20);
-
-        // Log the update user meta query and the backtrace
-        error_log('Update User Meta Query: ' . $query);
-        error_log('Backtrace: ' . print_r($backtrace, true));
-    }
-
-    return $query;
 }
 
