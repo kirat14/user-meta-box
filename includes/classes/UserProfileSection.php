@@ -2,11 +2,16 @@
 
 namespace yso\classes;
 
+use yso\builders\UMBCheckboxFieldBuilder;
 use yso\builders\UMBFieldBuilder;
 use yso\builders\UMBGroupCheckboxBuilder;
 use Valitron\Validator;
 use yso\builders\UMBInputBuilder;
+use yso\builders\UMBRadiobuttonFieldBuilder;
+use yso\builders\UMBSelectFieldBuilder;
 use yso\fields\UMBGroupField;
+use yso\fields\UMBRadiobuttonField;
+use yso\fields\UMBSelectField;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
@@ -18,13 +23,15 @@ if (!defined('ABSPATH')) {
 class UserProfileSection
 {
     public array $fields;
+    private array $validated_fields;
     private string $html;
     private Validator $validator;
-    public function __construct(private string $box_title, private $rules)
+    public function __construct(private string $box_title, private array $rules)
     {
         // Determines whether the current request is for an administrative interface page.
         if (!is_admin())
             return;
+
         $this->html_start();
     }
 
@@ -38,7 +45,7 @@ class UserProfileSection
      *
      * @since 1.0.0
      *
-     * @see UserMetaData::init()
+     * @see UserFieldCreator::init()
      *
      * @param mixed $json_obj JSON object containing a 'fields' property with sub-properties representing fields for the current section.
      *                        Each sub-property should include necessary information for field creation.
@@ -48,12 +55,20 @@ class UserProfileSection
     {
 
         foreach ($fields as $field_meta) {
-            if (isset($field_meta->group_label))
+            if (isset ($field_meta->group_label))
                 $this->fields[] = UMBGroupCheckboxBuilder::build($field_meta);
-            else if (isset($field_meta->type) && in_array($field_meta->type, ['text', 'email', 'password']))
-                $this->fields[] = UMBInputBuilder::build($field_meta);
-            else
-                $this->fields[] = UMBFieldBuilder::build($field_meta);
+            else {
+                if (isset ($field_meta->type)) {
+                    if (in_array($field_meta->type, ['text', 'email', 'password']))
+                        $this->fields[] = UMBInputBuilder::build($field_meta);
+                    else if ($field_meta->type == 'select')
+                        $this->fields[] = UMBSelectFieldBuilder::build($field_meta);
+                    else if ($field_meta->type == 'checkbox')
+                        $this->fields[] = UMBCheckboxFieldBuilder::build($field_meta);
+                    else if ($field_meta->type == 'radiobutton')
+                        $this->fields[] = UMBRadiobuttonFieldBuilder::build($field_meta);
+                }
+            }
         }
     }
 
@@ -86,41 +101,49 @@ class UserProfileSection
         echo $this->html;
     }
 
-    private function validate(&$validated_fields)
+    private function validate()
     {
+        $this->validated_fields["values"] = [];
+        $this->validated_fields["labels"] = [];
+
         // Setup the validation params
         foreach ($this->fields as $field) {
+
             if ($field instanceof UMBGroupField) {
                 foreach ($field->fields as $group_item) {
-                    if (isset($_POST[$group_item->name]))
-                        $validated_fields["skipped"][$group_item->name] = is_array($_POST[$group_item->name]) ? $_POST[$group_item->name] : sanitize_text_field($_POST[$group_item->name]);
-                    else
-                        $validated_fields["skipped"][$group_item->name] = '';
+                        $this->set_up_validation_array($group_item);
                 }
                 continue;
             }
 
-           
-            $validated_fields["values"][$field->name] = is_array($_POST[$field->name]) ? $_POST[$field->name] : sanitize_text_field($_POST[$field->name]);
-            $validated_fields["labels"][$field->name] = $field->label;
-            
+            $this->set_up_validation_array($field);
+
         }
 
-        $this->validator = new Validator($validated_fields["values"]);
+        // Should invoke set_up_validation
+        if (count($this->rules) == 0)
+            return true;
 
-        $this->validator->labels($validated_fields["labels"]);
+        $this->validator = new Validator($this->validated_fields["values"]);
+
+        $this->validator->labels($this->validated_fields["labels"]);
         $this->validator->rules($this->rules);
 
         return $this->validator->validate();
     }
 
-    public function update_custom_meta($errors, $update, $user)
+    // Remove the prefix from the field name to match the names in the rules array
+    private function set_up_validation_array($field)
     {
-        if (isset($user)) {
+        $field_name_unprefixed = substr($field->name, 4, strlen($field->name));
+        $this->validated_fields["values"][$field_name_unprefixed] = is_array($_POST[$field->name]) ? $_POST[$field->name] : sanitize_text_field($_POST[$field->name]);
+        $this->validated_fields["labels"][$field_name_unprefixed] = $field->label;
+    }
 
-            $validated_fields = [];
-
-            if (!$this->validate($validated_fields)) {
+    public function update_user_custom_meta($errors, $update, $user)
+    {
+        if (isset ($user)) {
+            if (!$this->validate()) {
                 $validator_errors = $this->validator->errors();
                 foreach ($validator_errors as $field_name => $list_of_errors) {
                     for ($i = 0; $i < count($list_of_errors); $i++) {
@@ -128,14 +151,8 @@ class UserProfileSection
                     }
                 }
             } else {
-                foreach ($validated_fields["values"] as $key => $value) {
-                    // Valid phone number, save it
-                    update_user_meta($user->ID, $key, $value);
-                }
-
-                foreach ($validated_fields["skipped"] as $key => $value) {
-                    // Valid phone number, save it
-                    update_user_meta($user->ID, $key, $value);
+                foreach ($this->fields as $field) {
+                    $field->update_user_meta($user->ID);
                 }
             }
 
@@ -162,6 +179,6 @@ class UserProfileSection
         );
 
         // hooks the validation functionality for each field
-        add_filter('user_profile_update_errors', array($this, 'update_custom_meta'), 10, 3);
+        add_filter('user_profile_update_errors', array($this, 'update_user_custom_meta'), 10, 3);
     }
 }

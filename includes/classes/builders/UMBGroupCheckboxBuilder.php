@@ -17,7 +17,7 @@ class UMBGroupCheckboxBuilder implements UMBFieldBuilderInterface
     public static function build($field_meta): null|UMBFieldInterface
     {
         $group_fields = array_map(function ($checkbox_meta) {
-            return UMBFieldBuilder::build($checkbox_meta);
+            return UMBCheckboxFieldBuilder::build($checkbox_meta);
         }, $field_meta->options);
 
         return new UMBGroupField($field_meta->group_label, $group_fields);

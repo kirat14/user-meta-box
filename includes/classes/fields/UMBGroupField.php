@@ -39,4 +39,10 @@ class UMBGroupField implements UMBFieldInterface
 
         return $html;
     }
+
+    public function update_user_meta($user_id): void{
+        foreach ($this->fields as $field) {
+            $field->update_user_meta($user_id);
+        }
+    }
 }

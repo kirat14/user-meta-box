@@ -2,50 +2,45 @@
 
 namespace yso\builders;
 
-use yso\fields\UMBCheckboxField;
 use yso\interfaces\UMBFieldInterface;
+use yso\interfaces\UMBFieldBuilderInterface;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
     exit;
 }
 
-use yso\interfaces\UMBFieldBuilderInterface;
+
 
 class UMBFieldBuilder implements UMBFieldBuilderInterface
 {
 
-    public static function check_name(&$field_meta)
+    public static string $type;
+    // @param $required_properties :Define the required properties for the SelectField constructor as a string    
+    public static function has_required_properties($field_meta, array $required_properties): bool
     {
-        // Check if 'name' property is set
-        if (!isset($field_meta->name))
-            return null;
-        else {
-            // Set 'id' property to 'name' if 'id' is not explicitly provided
-            if (!isset($field_meta->id))
-                $field_meta->id = $field_meta->name;
+        // Get the properties of the $field_meta object as an array
+        $field_properties = array_keys((array) $field_meta);
+
+        $result = array_diff($required_properties, $field_properties);
+
+        return count($result) > 0 ? false : true;
+    }
+
+    public static function unset_type(&$field_meta)
+    {
+        self::$type = $field_meta->type;
+
+        // Remove the type property from the field meta
+        // to pass the remaining attribute to the constructor
+        if (isset ($field_meta->type)) {
+            unset($field_meta->type);
         }
     }
 
     public static function build($field_meta): null|UMBFieldInterface
     {
-        self::check_name($field_meta);
-        if ($field_meta->type == 'select') {
-            $field_meta->type = 'SelectField';
-        } elseif ($field_meta->type == 'radio') {
-            $field_meta->type = 'RadiobuttonField';
-        } elseif ($field_meta->type == 'checkbox') {
-            $field_meta->type = 'CheckboxField';
-        }
-
-        $class_name = "\yso\\fields\UMB" . ucwords($field_meta->type);
-
-        // Remove the type property from the field meta
-        // to pass the remaining attribute to the constructor
-        if (isset($field_meta->type)) {
-            unset($field_meta->type);
-        }
-        $field_meta = array_values((array) $field_meta);
-        return new $class_name(...$field_meta);
+        // Implementation to be done in each FieldBuilder instance
+        return null;
     }
 }
