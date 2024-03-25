@@ -63,3 +63,15 @@ function get_user_by_meta_data($meta_key, $meta_value)
     return $users;
 
 } // end get_user_by_meta_data
+
+
+
+function minify_html($html) {
+    // Remove extra spaces and line breaks
+    $search = array('/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s');
+    $replace = array('>', '<', '\\1');
+    $minified = preg_replace($search, $replace, $html);
+
+    return $minified;
+}
+

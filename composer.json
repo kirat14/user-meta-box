@@ -9,7 +9,13 @@
             "yso\\classes\\": "includes/classes/",
             "yso\\interfaces\\": "includes/interfaces/",
             "yso\\builders\\": "includes/classes/builders/",
-            "yso\\fields\\": "includes/classes/fields/"
+            "yso\\fields\\": "includes/classes/fields/",
+            "yso\\Test\\PHPUnit\\": "tests/phpunit/tests/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "yso\\Test\\PHPUnit\\": "tests/phpunit/tests/"
         }
     },
     "authors": [
