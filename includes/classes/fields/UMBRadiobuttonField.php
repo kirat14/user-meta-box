@@ -29,7 +29,7 @@ class UMBRadiobuttonField extends UMBField
 	{
 		[$name_attr, $id_attr] = $this->field_attr($user_id);
 
-		$counter = -1;
+		$counter = 0;
 		$options_size = count($this->options);
 		$radioBtn_group_html = array_map(function ($item) use (&$counter, $name_attr, $id_attr, $options_size) {
 			$checked = '';
@@ -38,9 +38,9 @@ class UMBRadiobuttonField extends UMBField
 			$item_label = ucfirst($item);
 
 			if ($item == $this->value)
-				$checked = "checked = checked";
+				$checked = 'checked = "checked" ';
 
-			if($counter + 1 == $options_size)
+			if($counter + 1 != $options_size)
 				$radioHtml .= '<br>';
 
 			$radioHtml .= <<<RADIOHTML

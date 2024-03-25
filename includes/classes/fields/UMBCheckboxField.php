@@ -25,11 +25,11 @@ class UMBCheckboxField extends UMBField
 		[$name_attr, $id_attr] = $this->field_attr($user_id, false);
 		$saved_meta = esc_attr(get_user_meta($user_id, $this->name, true));
 
-		$checked = $this->value == $saved_meta ? ' checked = checked' : '';
+		$checked = $this->value == $saved_meta ? 'checked = "checked" ' : '';
 
 		$html = "
         <label for=\"{$this->id}\">
-            <input type=\"checkbox\" $checked {$name_attr}{$id_attr} value=\"{$this->value}\" />
+            <input type=\"checkbox\" {$name_attr} {$id_attr} value=\"{$this->value}\" $checked/>
             {$this->label}
         </label><br>
     ";
@@ -45,7 +45,7 @@ class UMBCheckboxField extends UMBField
 	 */
 	public function generate_html($user_id): string
 	{
-		$checkbox_html .= $this->get_checkbox_html($user_id);
+		$checkbox_html = $this->get_checkbox_html($user_id);
 
 		// Generate html
         $html = "

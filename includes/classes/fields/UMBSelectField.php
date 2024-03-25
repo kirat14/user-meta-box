@@ -29,31 +29,33 @@ class UMBSelectField extends UMBField
 	{
 		[$name_attr, $id_attr] = $this->field_attr($user_id);
 
-		$counter = -1;
+		$counter = 0;
 		$select_html = array_map(function ($item) use (&$counter) {
 			$selected = '';
-			$counter++;
+			
 			if ($counter == $this->value)
-				$selected = "selected = selected";
-			return "<option value=\"$counter\" {$selected}>{$item}</option>";
+				$selected = " selected = \"selected\"";
+			
+			$mapped_to = "<option value=\"$counter\"{$selected}>{$item}</option>";
+			$counter++;
+			return $mapped_to;
 		}, $this->options);
 
 		$select_html = implode('', $select_html);
-		$select_html = "<select {$name_attr}{$id_attr}>" . $select_html . "</select>";
+		$select_html = "<select {$name_attr} {$id_attr}>" . $select_html . "</select>";
 
 		// Generate html
-		$html = <<<HTML
+		$html = "
 			<tr>
 				<th>
-					<label for="{$this->id}">
+					<label for=\"{$this->id}\">
 						$this->label
 					</label>
 				</th>
 				<td>
 					$select_html
 				</td>
-			</tr>
-			HTML;
+			</tr>";
 
 		return $html;
 	}

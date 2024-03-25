@@ -25,8 +25,8 @@ abstract class UMBField implements UMBFieldInterface
 
     public function field_attr($user_id, $set_value = true): array
     {
-        $name_attr = " name=\"{$this->name}\"";
-        $id_attr = " id=\"{$this->id}\"";
+        $name_attr = "name=\"{$this->name}\"";
+        $id_attr = "id=\"{$this->id}\"";
 
         if($set_value)
             $this->value = esc_attr(get_user_meta($user_id, $this->name, true));

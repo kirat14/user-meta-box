@@ -39,7 +39,7 @@ class UMBInputField extends UMBField
 					</label>
 				</th>
 				<td>
-					<input type=\"{$this->type}\" class='regular-text'{$name_attr}{$id_attr} value=\"{$this->value}\" />
+					<input type=\"{$this->type}\" class='regular-text' {$name_attr} {$id_attr} value=\"{$this->value}\" />
 				</td>
 			</tr>
 			";
