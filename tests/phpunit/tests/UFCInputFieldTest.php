@@ -1,7 +1,7 @@
 <?php
-use yso\fields\UMBRadiobuttonField;
+use yso\fields\UFCInputField;
 
-class UMBRadiobuttonFieldTest extends WP_UnitTestCase
+class UFCInputFieldTest extends WP_UnitTestCase
 {
     public static int $user_id;
     public static function set_up_before_class()
@@ -21,33 +21,26 @@ class UMBRadiobuttonFieldTest extends WP_UnitTestCase
         self::$user_id = $factory->user->create($userdata);
     }
     /** @test */
-    public function generate_html()
+    public function generate_html_for_input_text()
     {
         // setup
-        $radiobutton_field = new UMBRadiobuttonField('sexe', 'sexe', 'male', ['male', 'female'], 'Sexe');
-        update_user_meta(self::$user_id, $radiobutton_field->name, $radiobutton_field->value);
+        $inputField = new UFCInputField('student-id', 'student-id', '616006', 'Student ID', 'text');
+        update_user_meta(self::$user_id, $inputField->name, $inputField->value);
 
         // Get actual value
-        $actual = $radiobutton_field->generate_html(self::$user_id);
+        $actual = $inputField->generate_html(self::$user_id);
         $actual = self::minify_html($actual);
 
         // Expected value
         $expected_value = "
         <tr>
             <th>
-                <label for=\"UFC-sexe\">
-                    Sexe
+                <label for=\"UFC-student-id\">
+                    Student ID
                 </label>
             </th>
             <td>
-                <label>
-					<input type=\"radio\" value=\"male\" checked = \"checked\" name=\"$radiobutton_field->name\">
-					Male
-				</label><br>
-                <label>
-					<input type=\"radio\" value=\"female\" name=\"$radiobutton_field->name\">
-					Female
-				</label>
+                <input type=\"text\" class='regular-text' name=\"UFC-student-id\" id=\"UFC-student-id\" value=\"616006\" />
             </td>
         </tr>
         ";

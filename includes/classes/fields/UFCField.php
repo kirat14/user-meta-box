@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use yso\interfaces\UMBFieldInterface;
+use yso\interfaces\UFCFieldInterface;
 
-abstract class UMBField implements UMBFieldInterface
+abstract class UFCField implements UFCFieldInterface
 {
 
     protected function __construct(

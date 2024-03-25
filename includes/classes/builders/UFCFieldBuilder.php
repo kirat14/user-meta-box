@@ -2,8 +2,8 @@
 
 namespace yso\builders;
 
-use yso\interfaces\UMBFieldInterface;
-use yso\interfaces\UMBFieldBuilderInterface;
+use yso\interfaces\UFCFieldInterface;
+use yso\interfaces\UFCFieldBuilderInterface;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 
 
 
-class UMBFieldBuilder implements UMBFieldBuilderInterface
+class UFCFieldBuilder implements UFCFieldBuilderInterface
 {
 
     public static string $type;
@@ -38,7 +38,7 @@ class UMBFieldBuilder implements UMBFieldBuilderInterface
         }
     }
 
-    public static function build($field_meta): null|UMBFieldInterface
+    public static function build($field_meta): null|UFCFieldInterface
     {
         // Implementation to be done in each FieldBuilder instance
         return null;

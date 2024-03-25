@@ -1,8 +1,8 @@
 <?php
-use yso\fields\UMBSelectField;
+use yso\fields\UFCSelectField;
 
 
-class UMBSelectFieldTest extends WP_UnitTestCase
+class UFCSelectFieldTest extends WP_UnitTestCase
 {
     public static int $user_id;
     public static function set_up_before_class()
@@ -25,7 +25,7 @@ class UMBSelectFieldTest extends WP_UnitTestCase
     public function generate_html_for_input_text()
     {
         // setup
-        $selectField = new UMBSelectField('sexe', 'sexe', '616006', ['male', 'female'], 'Sexe');
+        $selectField = new UFCSelectField('sexe', 'sexe', '616006', ['male', 'female'], 'Sexe');
         update_user_meta(self::$user_id, $selectField->name, '0');
 
         // Get actual value

@@ -1,11 +1,11 @@
 <?php
 
-use yso\builders\UMBFieldBuilder;
-use yso\fields\UMBCheckboxField;
-use yso\fields\UMBSelectField;
-use yso\fields\UMBTextField;
+use yso\builders\UFCFieldBuilder;
+use yso\fields\UFCCheckboxField;
+use yso\fields\UFCSelectField;
+use yso\fields\UFCTextField;
 
-class UMBFieldBuilderTest extends WP_UnitTestCase
+class UFCFieldBuilderTest extends WP_UnitTestCase
 {
     public function testBuildSelectField()
     {
@@ -23,9 +23,9 @@ class UMBFieldBuilderTest extends WP_UnitTestCase
         );
 
 
-        $field = UMBFieldBuilder::build($field_meta);
+        $field = UFCFieldBuilder::build($field_meta);
 
-        $this->assertInstanceOf(UMBSelectField::class, $field);
+        $this->assertInstanceOf(UFCSelectField::class, $field);
     }
 
     // Add more test methods to cover other scenarios and edge cases
@@ -43,7 +43,7 @@ class UMBFieldBuilderTest extends WP_UnitTestCase
             'extraAttr' => ''
         );
 
-        $field = UMBFieldBuilder::build($field_meta);
+        $field = UFCFieldBuilder::build($field_meta);
 
         $this->assertNull($field);
     }

@@ -2,16 +2,16 @@
 
 namespace yso\Test\PHPUnit;
 
-use yso\fields\UMBGroupField;
+use yso\fields\UFCGroupField;
 
-class UMBGroupFieldTest extends CheckboxFieldCommonTestSetup
+class UFCGroupFieldTest extends CheckboxFieldCommonTestSetup
 {
 
-    protected static UMBGroupField $group_field;
+    protected static UFCGroupField $group_field;
     public static function set_up_before_class(): void
     {
         parent::set_up_before_class();
-        self::$group_field = new UMBGroupField("Skills", [self::$checkboxFieldMale, self::$checkboxFieldFemale]);
+        self::$group_field = new UFCGroupField("Skills", [self::$checkboxFieldMale, self::$checkboxFieldFemale]);
     }
 
 

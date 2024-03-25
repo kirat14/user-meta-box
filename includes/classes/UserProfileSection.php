@@ -2,13 +2,13 @@
 
 namespace yso\classes;
 
-use yso\builders\UMBCheckboxFieldBuilder;
-use yso\builders\UMBGroupCheckboxBuilder;
+use yso\builders\UFCCheckboxFieldBuilder;
+use yso\builders\UFCGroupCheckboxBuilder;
 use Valitron\Validator;
-use yso\builders\UMBInputBuilder;
-use yso\builders\UMBRadiobuttonFieldBuilder;
-use yso\builders\UMBSelectFieldBuilder;
-use yso\fields\UMBGroupField;
+use yso\builders\UFCInputBuilder;
+use yso\builders\UFCRadiobuttonFieldBuilder;
+use yso\builders\UFCSelectFieldBuilder;
+use yso\fields\UFCGroupField;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
@@ -37,7 +37,7 @@ class UserProfileSection
      * Creates fields for the current section based on the 'fields' property of the provided JSON object.
      *
      * This method creates field instances from the 'fields' property of the given JSON object, where each sub-property represents a field.
-     * Different field types inherit from the UMBField class, and this function utilizes the Factory pattern
+     * Different field types inherit from the UFCField class, and this function utilizes the Factory pattern
      * to dynamically instantiate field objects based on their types.
      *
      * @since 1.0.0
@@ -53,17 +53,17 @@ class UserProfileSection
 
         foreach ($fields as $field_meta) {
             if (isset ($field_meta->group_label))
-                $this->fields[] = UMBGroupCheckboxBuilder::build($field_meta);
+                $this->fields[] = UFCGroupCheckboxBuilder::build($field_meta);
             else {
                 if (isset ($field_meta->type)) {
                     if (in_array($field_meta->type, ['text', 'email', 'password']))
-                        $this->fields[] = UMBInputBuilder::build($field_meta);
+                        $this->fields[] = UFCInputBuilder::build($field_meta);
                     else if ($field_meta->type == 'select')
-                        $this->fields[] = UMBSelectFieldBuilder::build($field_meta);
+                        $this->fields[] = UFCSelectFieldBuilder::build($field_meta);
                     else if ($field_meta->type == 'checkbox')
-                        $this->fields[] = UMBCheckboxFieldBuilder::build($field_meta);
+                        $this->fields[] = UFCCheckboxFieldBuilder::build($field_meta);
                     else if ($field_meta->type == 'radiobutton')
-                        $this->fields[] = UMBRadiobuttonFieldBuilder::build($field_meta);
+                        $this->fields[] = UFCRadiobuttonFieldBuilder::build($field_meta);
                 }
             }
         }
@@ -106,7 +106,7 @@ class UserProfileSection
         // Setup the validation params
         foreach ($this->fields as $field) {
 
-            if ($field instanceof UMBGroupField) {
+            if ($field instanceof UFCGroupField) {
                 foreach ($field->fields as $group_item) {
                         $this->set_up_validation_array($group_item);
                 }

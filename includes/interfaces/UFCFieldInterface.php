@@ -1,7 +1,7 @@
 <?php
 namespace yso\interfaces;
 
-interface UMBFieldInterface {
+interface UFCFieldInterface {
 	/**
 	 * Generate current field html.
 	 *

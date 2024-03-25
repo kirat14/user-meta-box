@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-class UMBRadiobuttonField extends UMBField
+class UFCRadiobuttonField extends UFCField
 {
 	public function __construct(
 		public string $name,

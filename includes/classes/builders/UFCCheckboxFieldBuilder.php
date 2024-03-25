@@ -2,9 +2,9 @@
 
 namespace yso\builders;
 
-use yso\builders\UMBFieldBuilder;
-use yso\fields\UMBCheckboxField;
-use yso\interfaces\UMBFieldInterface;
+use yso\builders\UFCFieldBuilder;
+use yso\fields\UFCCheckboxField;
+use yso\interfaces\UFCFieldInterface;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
@@ -13,9 +13,9 @@ if (!defined('ABSPATH')) {
 
 
 
-class UMBCheckboxFieldBuilder extends UMBFieldBuilder
+class UFCCheckboxFieldBuilder extends UFCFieldBuilder
 {
-    public static function build($field_meta): null|UMBFieldInterface
+    public static function build($field_meta): null|UFCFieldInterface
     {
         if (!self::has_required_properties($field_meta, ['name', 'value', 'label']))
             return null;
@@ -26,7 +26,7 @@ class UMBCheckboxFieldBuilder extends UMBFieldBuilder
             self::unset_type($field_meta);
             $field_meta = (array) $field_meta;
 
-            return new UMBCheckboxField(...$field_meta);
+            return new UFCCheckboxField(...$field_meta);
         }
     }
 }

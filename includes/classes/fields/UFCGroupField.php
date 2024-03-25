@@ -2,7 +2,7 @@
 
 namespace yso\fields;
 
-use yso\interfaces\UMBFieldInterface;
+use yso\interfaces\UFCFieldInterface;
 
 // disable direct file access
 if (!defined('ABSPATH')) {
@@ -10,8 +10,8 @@ if (!defined('ABSPATH')) {
 }
 
 // There should be a compistion relation
-// to the UMBField
-class UMBGroupField implements UMBFieldInterface
+// to the UFCField
+class UFCGroupField implements UFCFieldInterface
 {
     public function __construct(public string $label, public array $fields)
     {

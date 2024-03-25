@@ -3,12 +3,12 @@
 namespace yso\Test\PHPUnit;
 
 use WP_UnitTestCase;
-use yso\fields\UMBCheckboxField;
+use yso\fields\UFCCheckboxField;
 
 class CheckboxFieldCommonTestSetup extends WP_UnitTestCase
 {
-    protected static UMBCheckboxField $checkboxFieldMale;
-    protected static UMBCheckboxField $checkboxFieldFemale;
+    protected static UFCCheckboxField $checkboxFieldMale;
+    protected static UFCCheckboxField $checkboxFieldFemale;
     protected static int $user_id;
     protected static string $expectedCheckboxHTML;
 
@@ -17,8 +17,8 @@ class CheckboxFieldCommonTestSetup extends WP_UnitTestCase
         parent::set_up_before_class();
         self::$user_id = self::get_user_id();
 
-        self::$checkboxFieldMale = new UMBCheckboxField('student-sex-male', 'student-sex-male', 'male', 'Male');
-        self::$checkboxFieldFemale = new UMBCheckboxField('student-sex-female', 'student-sex-female', 'female', 'Female');
+        self::$checkboxFieldMale = new UFCCheckboxField('student-sex-male', 'student-sex-male', 'male', 'Male');
+        self::$checkboxFieldFemale = new UFCCheckboxField('student-sex-female', 'student-sex-female', 'female', 'Female');
 
         update_user_meta(self::$user_id, self::$checkboxFieldMale->name, self::$checkboxFieldMale->value);
     }
@@ -48,7 +48,7 @@ class CheckboxFieldCommonTestSetup extends WP_UnitTestCase
         return preg_replace('/\s+(?=<)|(?<=>)\s+/s', '', $html);
     }
 
-    protected static function get_expected_checkbox_html(UMBCheckboxField $checkbox, $checked = ' checked = "checked"'): string {
+    protected static function get_expected_checkbox_html(UFCCheckboxField $checkbox, $checked = ' checked = "checked"'): string {
 
         $expectedCheckboxHTML = "
         <label for=\"{$checkbox->id}\">
